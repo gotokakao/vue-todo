@@ -4,27 +4,46 @@
     <span class="addContainer" v-on:click="addTodo">
       <i class="fas fa-plus addBtn"></i>
     </span>
+
+    <Modal v-if="showModal" @close="showModal = false">
+      <!--
+      you can use custom content here to overwrite
+      default content
+      -->
+      <h3 slot="header">
+        warning!
+        <i class="fas fa-times closeModalBtn" @click="showModal = false"></i>
+      </h3>
+      <h3 slot="body">hahaha</h3>
+    </Modal>
   </div>
 </template>
 
 <script>
+import Modal from "../components/common/Modal";
+
 export default {
   data:function(){
     return{
-      newTodoItem: ""
+      newTodoItem: "",
+      showModal: false
     }
   },
   methods:{
     addTodo:function(){
       if(this.newTodoItem !== ""){
-        var obj = {completed:false, item: this.newTodoItem};
-        localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
+        this.$emit('addTodoItem',this.newTodoItem);
         this.clearInput();  
+      }else{
+        this.showModal = !this.showModal;
       }
     },
     clearInput:function(){
       this.newTodoItem = "";
     }
+  },
+  components:{
+    'Modal':Modal
   }
 }
 </script>
@@ -53,5 +72,8 @@ export default {
   .addBtn{
     color: white;
     vertical-align: middle;
+  }
+  .closeModalBtn{
+    color: #42b983;
   }
 </style>
